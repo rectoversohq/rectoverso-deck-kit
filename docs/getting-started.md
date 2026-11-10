@@ -28,7 +28,7 @@ Add the kit, pinned to a version:
 
 ```sh
 git submodule add https://github.com/rectoversohq/rectoverso-deck-kit.git kit
-git -C kit checkout v1.0.0
+git -C kit checkout v1.0.1
 git add .gitmodules kit
 ```
 

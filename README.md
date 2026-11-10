@@ -38,14 +38,14 @@ python3 check.py examples/morse-starter
 ```
 morse-starter-en: 7 cards, Morse-starter-en.apkg
 morse-starter-fr: 7 cards, Morse-starter-fr.apkg
-The deck holds to the contract (kit 1.0.0).
+The deck holds to the contract (kit 1.0.1).
 ```
 
 In a deck's own repository the kit is a Git submodule at `kit/`, pinned to a version:
 
 ```sh
 git submodule add https://github.com/rectoversohq/rectoverso-deck-kit.git kit
-git -C kit checkout v1.0.0
+git -C kit checkout v1.0.1
 python3 kit/check.py
 ```
 

@@ -11,4 +11,4 @@ from .contract import (ANYWHERE, CATEGORIES, NEW_PER_DAY, OPEN_LICENSES, PLAY_LA
                        Refusal, check, cover_files, cover_name, guid_prefix, payload, sample_card, sidecar_name,
                        source_inputs, verify_metadata, verify_payloads, verify_prerequisites, verify_sample)
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
