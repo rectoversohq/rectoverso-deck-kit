@@ -1,0 +1,9 @@
+{
+  "letters": [
+    {"id": "letter-e", "letter": "E", "morse": "·"},
+    {"id": "letter-t", "letter": "T", "morse": "–"},
+    {"id": "letter-a", "letter": "A", "morse": "· –"},
+    {"id": "letter-n", "letter": "N", "morse": "– ·"}
+  ],
+  "morse": {"E": "·", "T": "–", "A": "· –", "N": "– ·"}
+}

@@ -1,0 +1,9 @@
+{
+  "readLetter": "Read this letter.",
+  "readWord": "Read this word.",
+  "words": [
+    {"id": "word-tea", "word": "TEA", "after": "letter-a"},
+    {"id": "word-net", "word": "NET", "after": "letter-n"},
+    {"id": "word-ant", "word": "ANT", "after": "word-net"}
+  ]
+}

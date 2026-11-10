@@ -1,0 +1,54 @@
+{
+  "id": "morse-starter",
+  "version": "1.0.0",
+  "releaseTag": "v1.0.0",
+  "guidPrefix": "ex-morse",
+  "identityBase": 1900000000,
+  "contentModifiedAt": "2026-11-10T00:00:00Z",
+  "publication": {
+    "remote": "https://github.com/example/morse-starter",
+    "release": "https://github.com/example/morse-starter/releases/tag/v1.0.0",
+    "approved": false,
+    "visibility": "public"
+  },
+  "title": {"en": "Morse starter", "fr": "Morse, premiers pas"},
+  "subject": {"en": "Morse code", "fr": "Code Morse"},
+  "headline": {"en": "Four letters, then the words they make.", "fr": "Quatre lettres, puis les mots qu’elles forment."},
+  "description": {
+    "en": "Learn E, T, A and N in Morse code, then read short words made of them. Each word waits until you have met its letters.",
+    "fr": "Apprenez E, T, A et N en Morse, puis lisez de courts mots formés avec ces lettres. Chaque mot attend que vous ayez vu ses lettres."
+  },
+  "categories": ["languages"],
+  "cards": 7,
+  "pictures": 0,
+  "imageCredits": [],
+  "creator": "The RectoVerso deck kit's authors",
+  "license": "CC-BY-4.0",
+  "sources": [
+    {
+      "name": "Morse starter, the deck kit's example",
+      "version": "1.0.0",
+      "url": "https://github.com/rectoversohq/rectoverso-deck-kit",
+      "license": "CC-BY-4.0"
+    }
+  ],
+  "proOnly": false,
+  "sourceFiles": {"cards": "source/cards.json", "languages": "source/languages"},
+  "study": {"newCards": "deckOrder", "newPerDay": 4, "newPosition": "afterReviews"},
+  "languages": {
+    "en": {
+      "id": "morse-starter-en",
+      "title": "Morse starter",
+      "cards": 7,
+      "sample": "ex-morse-en-letter-e",
+      "package": {"file": "Morse-starter-en.apkg"}
+    },
+    "fr": {
+      "id": "morse-starter-fr",
+      "title": "Morse, premiers pas",
+      "cards": 7,
+      "sample": "ex-morse-fr-letter-e",
+      "package": {"file": "Morse-starter-fr.apkg"}
+    }
+  }
+}

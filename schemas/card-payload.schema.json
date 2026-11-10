@@ -1,0 +1,532 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/rectoversohq/rectoverso-deck-kit/main/schemas/card-payload.schema.json",
+  "title": "A card's payload",
+  "description": "The JSON object a note's \"RectoVerso\" field starts with: what RectoVerso needs to know of a card that Anki has no field for. docs/card-payload.md explains every key. A key the app doesn't know is ignored; a known key of the wrong type makes the whole payload unreadable, and the card then comes in as an ordinary Anki card, without its identity.",
+  "type": "object",
+  "required": [
+    "v",
+    "book",
+    "card",
+    "kind"
+  ],
+  "properties": {
+    "v": {
+      "description": "The payload's version.",
+      "const": 1
+    },
+    "book": {
+      "description": "The id of the deck the card belongs to, in RectoVerso's library: a UUID, the same for every card of one language's package, stable for good.",
+      "$ref": "#/$defs/uuid"
+    },
+    "card": {
+      "description": "The card's own id, a UUID, stable for good: the learner's progress is kept by it.",
+      "$ref": "#/$defs/uuid"
+    },
+    "kind": {
+      "description": "How the answer is revealed: basic (letter by letter, or a picture uncovered), cloze (a blank in a sentence), definition (prose, sharpening from a blur) or occlusion (a covered label of a figure).",
+      "enum": [
+        "basic",
+        "cloze",
+        "definition",
+        "occlusion"
+      ]
+    },
+    "noteID": {
+      "description": "What the card's siblings share: one card per noteID is shown a day. Cards that should not hold each other back have noteIDs of their own.",
+      "type": "string"
+    },
+    "requires": {
+      "description": "What the card builds on: tokens other cards of the deck introduce. With Lesson mode on, the card waits until each has been taught.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      }
+    },
+    "introduces": {
+      "description": "What the card teaches: once it has been answered, right or wrong, the cards that require these tokens may come.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      }
+    },
+    "resources": {
+      "description": "Extra lines shown under the answer once it is whole, each with its label.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "text"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "otherText": {
+      "description": "A title for the card in lists, for a card whose question and answer are both pictures.",
+      "type": "string"
+    },
+    "otherTextSource": {
+      "description": "The name of the field otherText comes from.",
+      "type": "string"
+    },
+    "occlusion": {
+      "description": "For a card of kind occlusion: the figure and what is covered on it.",
+      "type": "object",
+      "required": [
+        "imageName",
+        "box"
+      ],
+      "properties": {
+        "imageName": {
+          "description": "The figure's media file name.",
+          "type": "string",
+          "minLength": 1
+        },
+        "box": {
+          "description": "The bounds of what the card asks, in fractions of the picture from its top-left corner.",
+          "$ref": "#/$defs/rect"
+        },
+        "shapes": {
+          "description": "What the card asks: the shapes it covers.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shape"
+          }
+        },
+        "siblings": {
+          "description": "The figure's other covered shapes.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shape"
+          }
+        },
+        "texts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "text",
+              "origin",
+              "height"
+            ],
+            "properties": {
+              "text": {
+                "type": "string"
+              },
+              "origin": {
+                "$ref": "#/$defs/point"
+              },
+              "height": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "label": {
+          "description": "The answer under the cover, when it is text.",
+          "type": "string"
+        },
+        "labelAnswers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "mode": {
+          "description": "Whether the figure's other labels are covered while this one is asked (hideAll) or shown (hideOne).",
+          "enum": [
+            "hideAll",
+            "hideOne"
+          ]
+        },
+        "ordinal": {
+          "description": "The card's number within its figure, from 1.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "imageSize": {
+          "description": "The figure's size in pixels: [width, height].",
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 1000000
+          }
+        },
+        "preparationID": {
+          "description": "Set by the app at import; a deck leaves it out.",
+          "type": "string"
+        },
+        "detailsAfterAnswer": {
+          "type": "boolean"
+        },
+        "lit": {
+          "type": "boolean"
+        },
+        "position": {
+          "type": "string"
+        }
+      }
+    },
+    "preparation": {
+      "description": "A prepared figure: reviewed, clean pictures and regions for an occlusion card, validated by the app at import.",
+      "type": "object",
+      "required": [
+        "version",
+        "source",
+        "clean",
+        "masksSHA256",
+        "mode",
+        "regions"
+      ],
+      "dependentRequired": {
+        "darkSource": [
+          "darkClean"
+        ],
+        "darkClean": [
+          "darkSource"
+        ]
+      },
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "source": {
+          "$ref": "#/$defs/asset"
+        },
+        "clean": {
+          "$ref": "#/$defs/asset"
+        },
+        "darkSource": {
+          "$ref": "#/$defs/asset"
+        },
+        "darkClean": {
+          "$ref": "#/$defs/asset"
+        },
+        "masksSHA256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "mode": {
+          "enum": [
+            "hideAll",
+            "hideOne",
+            "lit"
+          ]
+        },
+        "regions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1024,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "ordinal",
+              "kind",
+              "geometry"
+            ],
+            "properties": {
+              "id": {
+                "description": "Stable within the figure.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "ordinal": {
+                "description": "The card of the figure this region belongs to, from 1.",
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 1024
+              },
+              "kind": {
+                "description": "Whether the region covers a printed label or a part of the picture.",
+                "enum": [
+                  "label",
+                  "picture"
+                ]
+              },
+              "geometry": {
+                "type": "object",
+                "required": [
+                  "kind",
+                  "coordinates"
+                ],
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "rect",
+                      "ellipse",
+                      "polygon"
+                    ]
+                  },
+                  "coordinates": {
+                    "description": "Fractions of the picture from its top-left corner: [x, y, width, height] for a rect or an ellipse; x, y pairs for a polygon (3 to 256 corners).",
+                    "type": "array",
+                    "minItems": 4,
+                    "maxItems": 512,
+                    "items": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  }
+                }
+              },
+              "answer": {
+                "type": "string",
+                "maxLength": 512,
+                "pattern": "\\S"
+              },
+              "title": {
+                "type": "string",
+                "maxLength": 256,
+                "pattern": "\\S"
+              },
+              "detail": {
+                "type": "string",
+                "maxLength": 1024,
+                "pattern": "\\S"
+              },
+              "position": {
+                "type": "string",
+                "maxLength": 128,
+                "pattern": "\\S"
+              }
+            }
+          }
+        },
+        "canvas": {
+          "type": "object",
+          "required": [
+            "method",
+            "light"
+          ],
+          "properties": {
+            "method": {
+              "const": "flat-srgb-v1"
+            },
+            "light": {
+              "$ref": "#/$defs/color"
+            },
+            "dark": {
+              "$ref": "#/$defs/color"
+            }
+          }
+        }
+      }
+    },
+    "originalOcclusionAnswer": {
+      "description": "The answer as the deck wrote it, so a later edit of the Back field in Anki can be told from it.",
+      "type": "string"
+    },
+    "place": {
+      "description": "The place the card asks for, drawn on a live map: its code, its region's name by language, its outline and, optionally, its marks.",
+      "type": "object",
+      "required": [
+        "code",
+        "region",
+        "polygons"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "region": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "polygons": {
+          "description": "Polygons, each a list of rings (the first the outer one), each a list of coordinates.",
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/coordinate"
+              }
+            }
+          }
+        },
+        "marks": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/coordinate"
+          }
+        }
+      }
+    },
+    "memory": {
+      "description": "Written by the app's own export, with lastReview and reviews: a learner's progress on the way through Anki and back. A deck leaves the three out.",
+      "type": "object"
+    },
+    "lastReview": {
+      "type": "integer"
+    },
+    "reviews": {
+      "type": "object"
+    }
+  },
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$"
+    },
+    "point": {
+      "description": "[x, y].",
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "number"
+      }
+    },
+    "rect": {
+      "description": "[[x, y], [width, height]].",
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "$ref": "#/$defs/point"
+      }
+    },
+    "shape": {
+      "description": "One shape, as an object with exactly one key: rect or ellipse (a box, the ellipse inscribed in it) or polygon (its corners).",
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "rect": {
+          "type": "object",
+          "required": [
+            "_0"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "_0": {
+              "$ref": "#/$defs/rect"
+            }
+          }
+        },
+        "ellipse": {
+          "type": "object",
+          "required": [
+            "_0"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "_0": {
+              "$ref": "#/$defs/rect"
+            }
+          }
+        },
+        "polygon": {
+          "type": "object",
+          "required": [
+            "_0"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "_0": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/point"
+              }
+            }
+          }
+        }
+      }
+    },
+    "coordinate": {
+      "type": "object",
+      "required": [
+        "longitude",
+        "latitude"
+      ],
+      "properties": {
+        "longitude": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "latitude": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        }
+      }
+    },
+    "asset": {
+      "description": "One picture of a prepared figure, by its media file name, with its SHA-256 and its size in pixels.",
+      "type": "object",
+      "required": [
+        "file",
+        "sha256",
+        "width",
+        "height"
+      ],
+      "properties": {
+        "file": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240,
+          "pattern": "^[^./\\\\:\\n][^/\\\\:\\n]*$"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16384
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16384
+        }
+      }
+    },
+    "sha256": {
+      "description": "A SHA-256, as 64 lowercase hexadecimal digits.",
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "color": {
+      "description": "[red, green, blue], each from 0 to 1.",
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    }
+  }
+}

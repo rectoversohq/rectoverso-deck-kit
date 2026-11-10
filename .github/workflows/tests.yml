@@ -1,0 +1,26 @@
+name: Tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      # Each version says its own: one failing never cancels the other.
+      fail-fast: false
+      matrix:
+        # The oldest and the newest Python the runner offers. The kit runs from 3.9 (a Mac's
+        # own python3), which the hosted image no longer has: that one is run by hand.
+        python: ['3.10', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: The check's tests
+        run: python -m unittest discover -s tests -v
+      - name: The example deck holds to the contract
+        run: python check.py examples/morse-starter
