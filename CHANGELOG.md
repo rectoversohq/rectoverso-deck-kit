@@ -2,6 +2,10 @@
 
 What each version of the kit changed. Versions follow [docs/versioning.md](docs/versioning.md#the-kits-versions).
 
+## 1.0.1
+
+- **Docs:** one package a language is the deck's rule; how a gallery groups packages for delivery is the gallery's own ([docs/languages.md](docs/languages.md), [docs/versioning.md](docs/versioning.md#a-release)).
+
 ## 1.0.0
 
 The first version: the contract as RectoVerso 1.1 reads it.
