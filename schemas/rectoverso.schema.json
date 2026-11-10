@@ -1,0 +1,413 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/rectoversohq/rectoverso-deck-kit/main/schemas/rectoverso.schema.json",
+  "title": "rectoverso.json",
+  "description": "A deck's description of itself, at the root of its repository: the single source of truth for its identity, its words, its languages, its credits and its options. docs/contract.md explains every field. A deck may keep keys of its own beside these; RectoVerso leaves them aside.",
+  "type": "object",
+  "required": [
+    "id",
+    "version",
+    "releaseTag",
+    "guidPrefix",
+    "identityBase",
+    "contentModifiedAt",
+    "publication",
+    "title",
+    "subject",
+    "headline",
+    "description",
+    "categories",
+    "cards",
+    "pictures",
+    "creator",
+    "license",
+    "sources",
+    "imageCredits",
+    "proOnly",
+    "sourceFiles",
+    "languages"
+  ],
+  "not": {
+    "required": [
+      "guidForm"
+    ]
+  },
+  "properties": {
+    "id": {
+      "description": "The deck's id, stable for good: its repository's name.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "version": {
+      "description": "This edition: major.minor.patch, with -rc.<n> for a release candidate.",
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(-[0-9A-Za-z]+(\\.[0-9A-Za-z]+)*)?$"
+    },
+    "releaseTag": {
+      "description": "The Git tag of this edition: \"v\" and the version.",
+      "type": "string",
+      "pattern": "^v[0-9]"
+    },
+    "guidPrefix": {
+      "description": "What every note's GUID starts with, before the language: lowercase words and digits, hyphens between them.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "identityBase": {
+      "description": "The base of the Anki ids the deck gives its note types and decks.",
+      "type": "integer"
+    },
+    "contentModifiedAt": {
+      "description": "When the content last changed (ISO 8601). It moves forward with every content change, never into the future: Anki updates a note only when it is newer.",
+      "type": "string",
+      "format": "date-time"
+    },
+    "publication": {
+      "description": "Where the deck is published, and whether its owner has approved this edition.",
+      "type": "object",
+      "required": [
+        "remote",
+        "release",
+        "approved",
+        "visibility"
+      ],
+      "properties": {
+        "remote": {
+          "description": "The repository's URL; its last part is the deck's id.",
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "release": {
+          "description": "This edition's release page: the remote, then /releases/tag/ and the release tag.",
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "approved": {
+          "description": "Whether this edition is approved for publication. Only an approved deck enters a gallery.",
+          "type": "boolean"
+        },
+        "visibility": {
+          "description": "\"private\" for a Pro-only deck, \"public\" for every other.",
+          "enum": [
+            "public",
+            "private"
+          ]
+        }
+      }
+    },
+    "title": {
+      "description": "The deck's plain title, in every language it ships.",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/text"
+      }
+    },
+    "subject": {
+      "description": "What the deck is about, in a word or two, in every language it ships.",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/text"
+      }
+    },
+    "headline": {
+      "description": "One line that says what the learner gets, in every language it ships.",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/text"
+      }
+    },
+    "description": {
+      "description": "A short description, in every language it ships.",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/text"
+      }
+    },
+    "whatsNew": {
+      "description": "This edition's notes, in one or more of the languages it ships.",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/text"
+      }
+    },
+    "playLabel": {
+      "description": "The word on the questions' sound button, in one or more of the languages it ships. Without one, the button says Play.",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)*$"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 20,
+        "pattern": "^\\S([^\\n]*\\S)?$"
+      }
+    },
+    "study": {
+      "description": "The study options the deck comes into the library with, for a course whose new cards build on each other. An option left out keeps the app's default.",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "newCards": {
+          "description": "New cards at random, or in the order the deck was written.",
+          "enum": [
+            "random",
+            "deckOrder"
+          ]
+        },
+        "newPerDay": {
+          "description": "New cards a day.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999
+        },
+        "newPosition": {
+          "description": "New cards after the reviews, before them, or mixed in.",
+          "enum": [
+            "afterReviews",
+            "beforeReviews",
+            "mixed"
+          ]
+        }
+      }
+    },
+    "categories": {
+      "description": "One or more of the gallery's categories, each once. The first places the deck in the gallery's sections.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "geography",
+          "history",
+          "languages",
+          "sciences",
+          "mathematics",
+          "medicine",
+          "arts",
+          "music"
+        ]
+      }
+    },
+    "cards": {
+      "description": "How many cards each language's package makes.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "pictures": {
+      "description": "How many pictures the deck credits: the length of imageCredits.",
+      "type": "integer",
+      "minimum": 0
+    },
+    "creator": {
+      "description": "Who made the deck.",
+      "$ref": "#/$defs/text"
+    },
+    "license": {
+      "description": "The deck's own license: an open one (CC0-1.0, CC-BY-4.0, CC-BY-SA-4.0, MIT, Apache-2.0, Public domain), or, for a Pro-only deck, its own terms as a LicenseRef- identifier.",
+      "type": "string",
+      "minLength": 1
+    },
+    "sources": {
+      "description": "Where the content comes from: at least one source.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "version",
+          "url",
+          "license"
+        ],
+        "properties": {
+          "name": {
+            "$ref": "#/$defs/text"
+          },
+          "version": {
+            "$ref": "#/$defs/text"
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^https://"
+          },
+          "license": {
+            "description": "An open license: never non-commercial (NC) or no-derivatives (ND).",
+            "$ref": "#/$defs/text"
+          }
+        }
+      }
+    },
+    "imageCredits": {
+      "description": "One credit for each picture.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "file",
+          "source",
+          "creator",
+          "license"
+        ],
+        "properties": {
+          "file": {
+            "description": "The picture's file name, with no folder.",
+            "type": "string",
+            "pattern": "^[^/\\\\]+$"
+          },
+          "source": {
+            "$ref": "#/$defs/text"
+          },
+          "creator": {
+            "$ref": "#/$defs/text"
+          },
+          "license": {
+            "enum": [
+              "CC0-1.0",
+              "CC-BY-4.0",
+              "CC-BY-SA-4.0",
+              "MIT",
+              "Apache-2.0",
+              "Public domain"
+            ]
+          },
+          "original": {
+            "description": "For a deck whose build renders its pictures: the file in the repository this picture is rendered from.",
+            "$ref": "#/$defs/text"
+          }
+        }
+      }
+    },
+    "proOnly": {
+      "description": "Whether the deck is offered only with RectoVerso Pro.",
+      "type": "boolean"
+    },
+    "renderedPictures": {
+      "description": "Whether the deck's build renders its pictures, which then stay out of Git: each credit names its original instead.",
+      "type": "boolean"
+    },
+    "sourceFiles": {
+      "description": "The paths, inside the repository, the deck builds from: \"pictures\" and \"sounds\" are the folders the cards' media are in; other keys are the deck's own.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "languages": {
+      "description": "Each language the deck ships, by its code: a package of its own, with ids of its own.",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)*$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "cards",
+          "package",
+          "sample"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "This language's package id, stable for good.",
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "title": {
+            "description": "The deck's title in this language: the same as title's.",
+            "$ref": "#/$defs/text"
+          },
+          "cards": {
+            "description": "How many cards this language's package makes: the same as cards.",
+            "type": "integer",
+            "minimum": 1
+          },
+          "sample": {
+            "description": "The one card the gallery opens as a sample question: a note's GUID, or \"<GUID>/<n>\" for the nth card of a note that makes several.",
+            "$ref": "#/$defs/text"
+          },
+          "package": {
+            "type": "object",
+            "required": [
+              "file"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "file": {
+                "description": "The package's file name on the release.",
+                "type": "string",
+                "pattern": "^[^/\\\\]+\\.apkg$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "covers": {
+      "description": "The gallery's pictures of the deck, per language: one or more for light mode and one or more for dark mode, in the order shown.",
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)*$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "light",
+          "dark"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "light": {
+            "$ref": "#/$defs/covers"
+          },
+          "dark": {
+            "$ref": "#/$defs/covers"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "text": {
+      "description": "Text that is not blank.",
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "covers": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "description": "<guidPrefix>[-<language>]-cover[-<light|dark>]-<n>.png, or .jpg for a photograph.",
+        "type": "string",
+        "pattern": "-cover(-(light|dark))?-[1-9][0-9]*\\.(png|jpg)$"
+      }
+    }
+  }
+}
