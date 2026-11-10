@@ -45,6 +45,8 @@ A version's release, on the deck's repository at its tag, has:
 
 A gallery that adopts the release checks every file against `SHA256SUMS`, and each package against its own sidecar. Packages are never committed to Git.
 
+A release always has one package a language, whatever a gallery does with them afterwards. A gallery may deliver several of a deck's packages to a learner's device together (RectoVerso's does, for small decks); that grouping is the gallery's own and never appears in a deck's `rectoverso.json` or on its release.
+
 Before a release, in this order: the deck's own checks; the kit's check; the packages opened in Anki, and an update over the previous version tried there (every review kept, no duplicate); the deck looked at in RectoVerso, in every language it ships. Then the deck's owner approves it, and `publication.approved` becomes `true`.
 
 ## The kit's versions

@@ -5,8 +5,10 @@ For any agent (Claude Code, Codex or another) working in a deck's repository, or
 ## Before anything
 
 - **The owner decides.** Coverage, names, conventions, categories, the sample, the covers, the study options, licenses, and every headline and description are the deck owner's. Bring each choice with a recommendation; never settle it in the deck.
-- **Evidence before the owner sees anything.** Run the checks, look at the result, and say plainly what you couldn't check.
-- **Nothing merged, tagged, released or published without the owner's go.** A green check publishes nothing.
+- **Start only on an explicit go** ("go", "start it", "yes"). An answer that sharpens the scope isn't one.
+- **Each decision gets a dated entry** in the deck's `docs/decisions.md`: the date, what was decided, by whom, and why. Earlier entries are history: never edit them.
+- **Evidence before the owner sees anything.** Run the checks, look at the result, and say plainly what you couldn't check, with what it would take to check it.
+- **Nothing merged, tagged, released or published without the owner's go,** given for that one step: a go for a merge isn't a go for the tag, the release, or a gallery's pin moved to it. A green check publishes nothing.
 - **A branch per change, a pull request to merge.** Commit only your own files, by name. Never rewrite pushed history.
 - **Packages, rendered pictures, caches and build output stay out of Git.** A tool takes its output path as an argument.
 
@@ -20,7 +22,9 @@ For any agent (Claude Code, Codex or another) working in a deck's repository, or
 | Write a word a learner reads, in any language | [docs/languages.md](docs/languages.md) |
 | Add a source, a picture or a sound | [docs/contract.md](docs/contract.md#credits-and-licenses): every source has its name, version, address and license, every picture its credit, and nothing is non-commercial or no-derivatives. |
 
+- **Never invent a fact.** Every fact (a name, a date, a value, a border) is checked against an independent, citable source, recorded with the content. When sources disagree or a fact can't be verified, say so and bring it to the owner.
 - **Every language a deck ships is complete,** and has as many cards as the others.
+- **New-card stages are an introduction order,** never a scheduler or an entitlement: where a deck sorts its new cards into stages, they say only which cards come first.
 - **A retired question keeps its note,** so its history stays; how it leaves the reviews is the owner's call.
 - **A private deck stays private:** its cards, pictures, sounds, packages, samples and screenshots never go into a public repository, an issue, a pull request, a chat or a test fixture. A public trace says counts and ids, nothing a learner would pay for.
 

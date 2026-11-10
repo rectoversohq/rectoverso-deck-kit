@@ -6,6 +6,7 @@ One deck, several languages. This page says how a deck holds them, and the rules
 
 - **One repository holds every language.** What the languages share (the facts, the pictures, the sounds, the builders) is kept once; each language's words live beside it.
 - **Each language is a package of its own:** its own `.apkg`, its own package id, its own note GUIDs (`<guidPrefix>-<language>-…`), its own Anki note type and deck ids. A learner picks a language before adding the deck. Two languages installed together never collide, and adding or changing one never touches another's progress.
+- **How a gallery delivers the packages is the gallery's.** RectoVerso's own gallery, for instance, may put a small deck's two packages in one download. That changes nothing in the deck: it still builds, names and releases one package a language.
 - **Every language a deck ships is complete:** its title, subject, headline and description, its notes for this edition, and every card. A language half done isn't shipped.
 - **Every language has the same number of cards** (`cards`). A card that only makes sense in one language has its counterpart in the others (the example deck's English word TEA is the French edition's TATA).
 - **A card's content is the author's.** The rules below are for the words around the cards (titles, descriptions, instructions, notes), and for cards the deck writes itself. Quoted material stays as its source has it.

@@ -2,6 +2,11 @@
 
 What each version of the kit changed. Versions follow [docs/versioning.md](docs/versioning.md#the-kits-versions).
 
+## 1.0.1
+
+- **AGENTS.md:** the rules every deck's agents follow that the first version left out: start only on an explicit go, a go for one step isn't a go for the next, a dated entry for each decision, never invent a fact, and new-card stages as an introduction order.
+- **Docs:** one package a language is the deck's rule; how a gallery groups packages for delivery is the gallery's own ([docs/languages.md](docs/languages.md), [docs/versioning.md](docs/versioning.md#a-release)).
+
 ## 1.0.0
 
 The first version: the contract as RectoVerso 1.1 reads it.
